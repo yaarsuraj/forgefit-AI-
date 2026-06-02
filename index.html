@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ForgeFit AI – Personalized Gym Scheduler</title>
+  <meta name="description" content="AI-powered personalized gym schedule generator. Tailored to your body, goals, and medical history." />
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚡</text></svg>" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,600;1,9..40,300&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+
+  <!-- ─── HEADER ─── -->
+  <header>
+    <div class="logo">FORGE<span>FIT</span> <small>AI</small></div>
+    <nav class="nav-tabs">
+      <button class="nav-tab active" id="tab-setup" onclick="showView('profile-view')">Setup</button>
+      <button class="nav-tab" id="tab-schedule" style="display:none" onclick="showView('schedule-view')">My Schedule</button>
+    </nav>
+  </header>
+
+  <!-- ─── ONBOARDING ─── -->
+  <div id="profile-view" class="view active">
+    <div class="onboarding">
+      <div class="onboarding-hero">
+        <h1>YOUR <em>PERSONALIZED</em><br>AI GYM PLAN</h1>
+        <p>Answer a few questions. Our AI trainer builds your perfect program — adjusted for your body, history, and health.</p>
+      </div>
+      <div class="step-indicator">
+        <div class="step-dot active" id="dot-0"></div>
+        <div class="step-dot" id="dot-1"></div>
+        <div class="step-dot" id="dot-2"></div>
+        <div class="step-dot" id="dot-3"></div>
+      </div>
+
+      <!-- STEP 0 -->
+      <div class="form-step active" id="step-0">
+        <div class="step-title">YOUR BASICS</div>
+        <div class="step-subtitle">Let us know your body stats</div>
+        <div class="field-grid">
+          <div><label>Full Name</label><input type="text" id="name" placeholder="e.g. Arjun Sharma" /></div>
+          <div><label>Age</label><input type="number" id="age" placeholder="25" min="14" max="90" /></div>
+        </div>
+        <div class="field-grid">
+          <div>
+            <label>Gender</label>
+            <select id="gender">
+              <option value="">Select…</option>
+              <option>Male</option><option>Female</option><option>Non-binary</option>
+            </select>
+          </div>
+          <div><label>Height (cm)</label><input type="number" id="height" placeholder="175" /></div>
+        </div>
+        <div class="field-grid">
+          <div><label>Weight (kg)</label><input type="number" id="weight" placeholder="72" /></div>
+          <div><label>Body Fat % (optional)</label><input type="number" id="bodyfat" placeholder="20" /></div>
+        </div>
+        <div class="btn-row">
+          <span></span>
+          <button class="btn-next" onclick="nextStep(1)">Continue →</button>
+        </div>
+      </div>
+
+      <!-- STEP 1 -->
+      <div class="form-step" id="step-1">
+        <div class="step-title">GOALS & EXPERIENCE</div>
+        <div class="step-subtitle">What do you want to achieve?</div>
+        <div class="field-full">
+          <label>Primary Goal</label>
+          <div class="chip-group" id="goal-chips">
+            <div class="chip selected" data-val="weight-loss">Weight Loss</div>
+            <div class="chip" data-val="muscle-gain">Muscle Gain</div>
+            <div class="chip" data-val="endurance">Endurance</div>
+            <div class="chip" data-val="strength">Pure Strength</div>
+            <div class="chip" data-val="flexibility">Flexibility</div>
+            <div class="chip" data-val="general-fitness">General Fitness</div>
+          </div>
+        </div>
+        <div class="field-full">
+          <label>Experience Level</label>
+          <div class="chip-group" id="exp-chips">
+            <div class="chip selected" data-val="beginner">🌱 Complete Beginner</div>
+            <div class="chip" data-val="novice">6 Months +</div>
+            <div class="chip" data-val="intermediate">1–2 Years</div>
+            <div class="chip" data-val="advanced">3+ Years</div>
+          </div>
+        </div>
+        <div class="field-grid">
+          <div>
+            <label>Days Available Per Week</label>
+            <select id="days-per-week">
+              <option>2</option><option>3</option><option selected>4</option>
+              <option>5</option><option>6</option>
+            </select>
+          </div>
+          <div>
+            <label>Session Duration</label>
+            <select id="session-duration">
+              <option>30 mins</option><option>45 mins</option>
+              <option selected>60 mins</option><option>75 mins</option><option>90 mins</option>
+            </select>
+          </div>
+        </div>
+        <div class="field-full">
+          <label>Equipment Access</label>
+          <div class="chip-group" id="equip-chips">
+            <div class="chip selected" data-val="full-gym">Full Gym</div>
+            <div class="chip" data-val="home-dumbbells">Home + Dumbbells</div>
+            <div class="chip" data-val="bodyweight">Bodyweight Only</div>
+            <div class="chip" data-val="bands">Resistance Bands</div>
+          </div>
+        </div>
+        <div class="btn-row">
+          <button class="btn-back" onclick="nextStep(0)">← Back</button>
+          <button class="btn-next" onclick="nextStep(2)">Continue →</button>
+        </div>
+      </div>
+
+      <!-- STEP 2 -->
+      <div class="form-step" id="step-2">
+        <div class="step-title">HEALTH & MEDICAL</div>
+        <div class="step-subtitle">This helps us create a SAFE program for you</div>
+        <div class="field-full">
+          <label>Medical Conditions (select all that apply)</label>
+          <div class="chip-group" id="medical-chips">
+            <div class="condition-chip" data-val="none">✅ None</div>
+            <div class="condition-chip" data-val="back-pain">Back Pain</div>
+            <div class="condition-chip" data-val="knee-pain">Knee Issues</div>
+            <div class="condition-chip" data-val="shoulder">Shoulder Injury</div>
+            <div class="condition-chip" data-val="heart">Heart Condition</div>
+            <div class="condition-chip" data-val="diabetes">Diabetes</div>
+            <div class="condition-chip" data-val="hypertension">Hypertension</div>
+            <div class="condition-chip" data-val="asthma">Asthma</div>
+            <div class="condition-chip" data-val="obesity">Obesity (BMI 30+)</div>
+            <div class="condition-chip" data-val="arthritis">Arthritis</div>
+            <div class="condition-chip" data-val="hernia">Hernia</div>
+            <div class="condition-chip" data-val="pregnancy">Pregnancy/Postpartum</div>
+          </div>
+        </div>
+        <div class="field-full">
+          <label>Past Injuries or Surgery</label>
+          <textarea id="injuries" placeholder="e.g. ACL surgery 2022, rotator cuff strain…"></textarea>
+        </div>
+        <div class="field-full">
+          <label>Current Activity Level</label>
+          <div class="chip-group" id="activity-chips">
+            <div class="chip selected" data-val="sedentary">Sedentary (desk job)</div>
+            <div class="chip" data-val="light">Lightly Active</div>
+            <div class="chip" data-val="moderate">Moderately Active</div>
+            <div class="chip" data-val="active">Very Active</div>
+          </div>
+        </div>
+        <div class="btn-row">
+          <button class="btn-back" onclick="nextStep(1)">← Back</button>
+          <button class="btn-next" onclick="nextStep(3)">Continue →</button>
+        </div>
+      </div>
+
+      <!-- STEP 3 -->
+      <div class="form-step" id="step-3">
+        <div class="step-title">WORKOUT PREFERENCES</div>
+        <div class="step-subtitle">Final touches to personalize your program</div>
+        <div class="field-full">
+          <label>Workout Style Preferences</label>
+          <div class="chip-group" id="style-chips">
+            <div class="chip selected" data-val="weights">Heavy Weights</div>
+            <div class="chip" data-val="hiit">HIIT</div>
+            <div class="chip" data-val="yoga">Yoga / Mobility</div>
+            <div class="chip" data-val="running">Running / Cardio</div>
+            <div class="chip" data-val="circuits">Circuit Training</div>
+            <div class="chip" data-val="sports">Sports-based</div>
+          </div>
+        </div>
+        <div class="field-grid">
+          <div>
+            <label>Preferred Workout Time</label>
+            <select id="pref-time">
+              <option>Early Morning (5–7am)</option>
+              <option selected>Morning (7–10am)</option>
+              <option>Afternoon</option>
+              <option>Evening</option>
+              <option>Late Night</option>
+            </select>
+          </div>
+          <div>
+            <label>Diet Type</label>
+            <select id="diet">
+              <option>No Preference</option>
+              <option>High Protein</option>
+              <option>Vegetarian</option>
+              <option>Vegan</option>
+              <option>Keto</option>
+              <option>Intermittent Fasting</option>
+            </select>
+          </div>
+        </div>
+        <div class="field-full">
+          <label>Anything else the AI should know?</label>
+          <textarea id="extra-notes" placeholder="e.g. I get bored easily, I have a wedding in 3 months, I travel a lot…"></textarea>
+        </div>
+
+        <!-- API Key input -->
+        <div class="field-full api-key-field">
+          <label>Anthropic API Key <span class="label-hint">(stored only in your browser)</span></label>
+          <input type="password" id="api-key" placeholder="sk-ant-..." autocomplete="off" />
+          <div class="api-key-note">
+            🔒 Your key is never sent to any server other than Anthropic directly from your browser.
+            Get a free key at <a href="https://console.anthropic.com" target="_blank">console.anthropic.com</a>
+          </div>
+        </div>
+
+        <div class="btn-row">
+          <button class="btn-back" onclick="nextStep(2)">← Back</button>
+          <button class="btn-generate" onclick="generateSchedule()">
+            <span>⚡</span> GENERATE MY PLAN
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ─── GENERATING ─── -->
+  <div id="generating-view" class="view">
+    <div class="generating-view">
+      <div class="pulse-ring">🤖</div>
+      <div class="gen-text">BUILDING YOUR PLAN</div>
+      <div class="gen-sub" id="gen-sub">Analyzing your body, goals &amp; health data…</div>
+      <div class="gen-progress"><div class="gen-bar" id="gen-bar"></div></div>
+    </div>
+  </div>
+
+  <!-- ─── DASHBOARD ─── -->
+  <div id="schedule-view" class="view">
+    <div class="dashboard">
+      <div class="dash-header">
+        <div class="dash-greeting">
+          <h2>GOOD <span id="time-greeting">MORNING</span>, <span id="user-name-display">CHAMPION</span> 💪</h2>
+          <p id="dash-subtitle">Week 1 of your personalized 12-week program</p>
+        </div>
+        <button class="btn-regen" onclick="editProfile()">✏️ Edit Profile</button>
+      </div>
+
+      <div class="stats-row">
+        <div class="stat-card">
+          <div class="stat-label">Weekly Sessions</div>
+          <div class="stat-val" id="stat-sessions">4</div>
+          <div class="stat-unit">days / week</div>
+        </div>
+        <div class="stat-card accent2">
+          <div class="stat-label">Est. Calories Burned</div>
+          <div class="stat-val" id="stat-cals">2,100</div>
+          <div class="stat-unit">per week</div>
+        </div>
+        <div class="stat-card green">
+          <div class="stat-label">Program Phase</div>
+          <div class="stat-val phase-val" id="stat-phase">ADAPT</div>
+          <div class="stat-unit" id="stat-phase-desc">Foundation building</div>
+        </div>
+        <div class="stat-card red">
+          <div class="stat-label">Intensity Level</div>
+          <div class="stat-val" id="stat-intensity">6/10</div>
+          <div class="stat-unit">Moderate</div>
+        </div>
+      </div>
+
+      <div class="two-col">
+        <div>
+          <div class="schedule-card">
+            <div class="schedule-header">
+              <h3>WEEKLY SCHEDULE</h3>
+              <div class="week-badge">Week 1</div>
+            </div>
+            <div id="schedule-days"></div>
+          </div>
+        </div>
+
+        <div class="right-panel">
+          <div class="panel-card">
+            <h4>WEEKLY PROGRESS</h4>
+            <div class="progress-ring-wrap">
+              <svg class="ring-svg" width="80" height="80" viewBox="0 0 80 80">
+                <circle cx="40" cy="40" r="32" fill="none" stroke="#252525" stroke-width="8"/>
+                <circle cx="40" cy="40" r="32" fill="none" stroke="#e8ff47" stroke-width="8"
+                  stroke-dasharray="201" stroke-dashoffset="151" stroke-linecap="round"
+                  transform="rotate(-90 40 40)"/>
+                <text x="40" y="45" text-anchor="middle" fill="#f0f0f0" font-size="14" font-family="Bebas Neue, sans-serif">25%</text>
+              </svg>
+              <div class="ring-info">
+                <p><strong>1 of 4 sessions</strong> completed this week</p>
+                <p>Consistency beats perfection every time.</p>
+              </div>
+            </div>
+            <div class="milestone-list" id="milestones"></div>
+          </div>
+
+          <div class="panel-card" id="medical-card" style="display:none">
+            <h4>⚕️ HEALTH NOTES</h4>
+            <div id="medical-notes"></div>
+          </div>
+
+          <div class="panel-card">
+            <h4>AI TRAINER TIP</h4>
+            <div class="tip-box" id="ai-tip">
+              <strong>💡 Personalized Insight</strong>
+              Loading your personalized tip…
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- AI Chat -->
+    <div class="ai-response-bubble" id="ai-bubble">
+      <div class="ai-response-header">
+        <div class="ai-label">⚡ AI Trainer</div>
+        <button class="ai-close" onclick="closeAiBubble()">✕</button>
+      </div>
+      <div id="ai-bubble-text">…</div>
+    </div>
+    <div class="ai-chat-bar">
+      <input class="ai-chat-input" id="chat-input"
+        placeholder="Ask your AI trainer… e.g. 'Modify chest day for shoulder pain'"
+        onkeydown="if(event.key==='Enter') sendChat()" />
+      <button class="ai-send" onclick="sendChat()">Ask AI ⚡</button>
+    </div>
+  </div>
+
+  <script src="js/app.js"></script>
+</body>
+</html>
