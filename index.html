@@ -204,11 +204,11 @@
 
         <!-- API Key input -->
         <div class="field-full api-key-field">
-          <label>Anthropic API Key <span class="label-hint">(stored only in your browser)</span></label>
-          <input type="password" id="api-key" placeholder="sk-ant-..." autocomplete="off" />
+          <label>Anthropic API Key <span class="label-hint">(optional — leave blank for an offline plan)</span></label>
+          <input type="password" id="api-key" placeholder="sk-ant-... (optional)" autocomplete="off" />
           <div class="api-key-note">
-            🔒 Your key is never sent to any server other than Anthropic directly from your browser.
-            Get a free key at <a href="https://console.anthropic.com" target="_blank">console.anthropic.com</a>
+            Leave this empty to generate a local template plan from your answers. Paste a key only if you want Claude to write the plan.
+            Get a key at <a href="https://console.anthropic.com" target="_blank">console.anthropic.com</a>
           </div>
         </div>
 
